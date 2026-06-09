@@ -1,0 +1,6 @@
+package com.wallet.payments.enums;
+
+public enum TransactionType {
+    DEBIT,
+    CREDIT
+}
