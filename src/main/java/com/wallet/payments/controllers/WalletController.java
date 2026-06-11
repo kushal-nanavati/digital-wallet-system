@@ -22,7 +22,7 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/api/create-wallet")
+    @PostMapping("/api/wallet/create")
     public String createWallet(@RequestBody Wallet wallet) {
         Wallet w = this.walletService.createWallet(wallet);
         if(w != null) {
