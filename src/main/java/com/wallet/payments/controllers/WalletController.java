@@ -47,4 +47,15 @@ public class WalletController {
         }
     }
 
+    @PostMapping("/deactivate")
+    public ResponseEntity<?> deactivateWallet(@RequestBody WalletRequestDTO requestDTO) {
+        try {
+            WalletResponseDTO responseDTO = this.walletService.deactivateWallet(requestDTO.getUserId());
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        }
+        catch(ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

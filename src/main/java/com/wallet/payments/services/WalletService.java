@@ -4,6 +4,7 @@ import com.wallet.payments.dtos.responses.WalletResponseDTO;
 import com.wallet.payments.enums.WalletStatus;
 import com.wallet.payments.exceptions.InsufficientFundsException;
 import com.wallet.payments.exceptions.ResourceNotFoundException;
+import com.wallet.payments.exceptions.WalletDeactivatedException;
 import com.wallet.payments.mappers.WalletMapper;
 import com.wallet.payments.models.Account;
 import com.wallet.payments.models.User;
@@ -70,9 +71,13 @@ public class WalletService {
 
         // Credit the amount to the wallet
         if(account.getWallet() != null) {
-            Wallet wallet = account.getWallet();
-            wallet.setBalance(wallet.getBalance().add(amount));
-            return this.walletMapper.toWalletResponseDtoFromEntity(this.walletRepository.save(wallet));
+            if(account.getWallet().getStatus() != WalletStatus.BLOCKED) {
+                Wallet wallet = account.getWallet();
+                wallet.setBalance(wallet.getBalance().add(amount));
+                wallet.setStatus(WalletStatus.ACTIVE);
+                return this.walletMapper.toWalletResponseDtoFromEntity(this.walletRepository.save(wallet));
+            }
+            throw new WalletDeactivatedException("Wallet is deactivated. Please activate it first.");
         }
 
         // If wallet isn't present, then simply create it with the given amount
@@ -81,7 +86,17 @@ public class WalletService {
         wallet.setBalance(amount);
         wallet.setCreatedAt(LocalDateTime.now());
         wallet.setUpdatedAt(LocalDateTime.now());
+        wallet.setStatus(WalletStatus.ACTIVE);
         wallet.setUser(isExistingUser);
         return this.walletMapper.toWalletResponseDtoFromEntity(this.walletRepository.save(wallet));
+    }
+
+    public WalletResponseDTO deactivateWallet(Long userId) {
+        Wallet w = this.walletRepository.findByUserId(userId);
+        if(w != null) {
+            w.setStatus(WalletStatus.BLOCKED);
+            return this.walletMapper.toWalletResponseDtoFromEntity(this.walletRepository.save(w));
+        }
+        throw new ResourceNotFoundException("Wallet doesn't exist for this user.");
     }
 }
