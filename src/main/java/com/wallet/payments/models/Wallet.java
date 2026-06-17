@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,7 +29,8 @@ public class Wallet {
     private WalletStatus status;
 
     @OneToOne
-    @JoinColumn(name = "userId")
+    @ToString.Exclude
+    @JoinColumn(name = "userId", unique = true, nullable = true)
     private User user;
 
     @OneToMany(mappedBy = "wallet")
@@ -40,6 +42,6 @@ public class Wallet {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "wallet")
-    private List<Account> accounts;
+    @OneToOne(mappedBy = "wallet")
+    private Account account;
 }

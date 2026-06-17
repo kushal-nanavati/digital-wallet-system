@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WalletRequestDTO {
+    @NotNull(message = "User ID is required.")
+    private Long userId;
 
-    @NotNull(message = "Balance amount is required.")
-    @DecimalMin(value = "0.00", message = "Balance must be greater than 0")
     private BigDecimal balance = BigDecimal.ZERO;
 }

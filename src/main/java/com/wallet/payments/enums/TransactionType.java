@@ -2,5 +2,6 @@ package com.wallet.payments.enums;
 
 public enum TransactionType {
     DEBIT,
-    CREDIT
+    CREDIT,
+    TOP_UP
 }

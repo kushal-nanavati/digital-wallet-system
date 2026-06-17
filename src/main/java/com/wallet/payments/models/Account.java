@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -19,15 +20,18 @@ public class Account {
     private Long accountNumber;
 
     @Column(nullable = false)
-    private String name;
+    private String accountHolder;
 
     @Column(nullable = true)
-    private BigDecimal amount = BigDecimal.ZERO;
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    @Column(nullable = false)
-    private AccountType accountType;
+    @OneToOne
+    @ToString.Exclude
+    @JoinColumn(name = "userId", unique = true, nullable = true)
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "walletId")
+    @OneToOne
+    @ToString.Exclude
+    @JoinColumn(name = "walletId", unique = true, nullable = true)
     private Wallet wallet;
 }
