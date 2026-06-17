@@ -23,10 +23,4 @@ public class UserController {
         UserResponseDTO savedUserDto = userService.createUser(userDto);
         return new ResponseEntity<>(savedUserDto, HttpStatus.CREATED);
     }
-
-    @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
 }
